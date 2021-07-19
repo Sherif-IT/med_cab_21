@@ -42,5 +42,13 @@ class AppFixtures extends Fixture
          $doc->setPhone("+33751411568");
          $manager->persist($doc); 
         $manager->flush();
+        
+        /*$p = new Patient();
+        $p->setFirstName("Mario");
+        $p->setLastName("Gomis");
+        $p->setPhone("+33753412565");
+        $p->setPhone("+33753412565");
+        $p->setPatientName("ff");
+        $p->setAddress("rue Belsuce 11, Mulhouse,FR"); */
     }
 }

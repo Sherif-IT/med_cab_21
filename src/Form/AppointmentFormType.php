@@ -108,7 +108,7 @@ class AppointmentFormType extends AbstractType
                 'mapped'      => false,
                 'required'    => false,
                 'attr' => ['class' => 'form-select bg-white border-0'],
-                'placeholder' => 'choisir un service'
+                'placeholder' => 'Choisir un service'
                 //'choice_value' => $options['entityManager']->getRepository('App:Department')->find(1),
               ])
               ->add('idDoctor', EntityType::class, [
@@ -117,7 +117,7 @@ class AppointmentFormType extends AbstractType
                 'mapped'      => true,
                 'required'    => true,
                 'attr' => ['class' => 'form-select bg-white border-0'],
-                'placeholder' => 'selectionner un docteur'
+                'placeholder' => 'Selectionner un docteur'
                 //'choice_value' => $options['entityManager']->getRepository('App:Department')->find(1),
               ])
               

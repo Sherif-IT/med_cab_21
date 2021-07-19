@@ -25,11 +25,11 @@ class AppointmentController extends AbstractController
     }
 
     /**
-     * @Route("/",  name="make_appointment")
+     * @Route("/book-appointment",  name="make_appointment")
     */
     public function index(Request $request): Response
-    {
-        $rdv = new Appointment();
+    {   
+        $rdv = new Appointment();   
         $patientRepo = $this->getDoctrine()
         ->getRepository(Patient::class) ;  
         $p = $patientRepo->find(1);  

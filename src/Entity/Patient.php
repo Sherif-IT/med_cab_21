@@ -119,6 +119,15 @@ class Patient
         return $this;
     }
 
+    public function getFullName(): ?string
+    {
+        $fullName = implode(" ", [$this->firstName,$this->lastName]);
+        
+
+        return $fullName;
+    }
+
+
     /**
      * @return Collection|Appointment[]
      */

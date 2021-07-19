@@ -1,0 +1,82 @@
+  {% extends 'admin_base.html.twig' %}
+
+    {% block stylesheets %}
+        <style>
+            #calendrier {
+                width: 80%; 
+                margin: auto;
+            }
+        </style>
+    {% endblock %}
+
+    {% block main %} 
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper"> 
+        <!-- Main content -->
+        <section class="content">
+        <div class="container-fluid"> 
+            <!-- /.row -->
+            <!-- Main row -->
+            <div class="row"> 
+                <div id="calendrier"> 
+            </div> 
+            <!-- right col -->
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+        </section> 
+        <!-- /.content -->
+    </div>
+    {% endblock main %} 
+    {% block javascripts %}
+       <script>        
+            window.onload = () => {  
+            let todaySDate = new Date().toISOString().slice(0, 10) 
+            FCappointments = "{{ FCappointments|raw|e('js') }}"
+            console.log(FCappointments);
+            let calendarElt = document.querySelector("#calendrier")   
+            var FCappointments = JSON.parse(FCappointments)
+            var totAppointments = []
+            for(var i in FCappointments)
+                totAppointments.push(FCappointments[i]); 
+                
+            let calendar = new FullCalendar.Calendar(calendarElt, {
+                    initialDate: todaySDate,
+                    initialView: 'timeGridWeek',
+                    locale: 'fr',
+                    timeZone: 'Europe/Paris',
+                    headerToolbar: {
+                        start: 'prev,next today',
+                        center: 'title',
+                        end: 'dayGridMonth,timeGridWeek'
+                    }, 
+                    events: FCappointments,
+                    slotDuration: '01:00',
+                    slotMinTime:"09:00:00",
+                    slotMaxTime:"21:00:00",
+                    slotLabelInterval:"01:00",
+                    editable: true,
+                    eventResizableFromStart: true
+                })
+                calendar.on('eventChange', (e) => {
+                    let url = `/calendar/${e.event.id}/edit`
+                    let donnees = {   
+                        "title": e.event.title,
+                        "start": e.event.start,
+                        "end": e.event.end,
+                        "backgroundColor": e.event.backgroundColor,
+                        "borderColor": e.event.borderColor,
+                        "textColor": e.event.textColor,
+                    }
+
+                    let xhr = new XMLHttpRequest
+
+                    xhr.open("POST", url)
+                    xhr.send(JSON.stringify(donnees))
+                })
+
+                calendar.render()
+            }
+        </script>  
+    {% endblock %} 
+

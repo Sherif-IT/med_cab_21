@@ -1,0 +1,163 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block stylesheets %}
+<style> 
+    tr.group,
+    tr.group:hover {
+        background-color: #ddd !important;
+                        margin: auto;
+
+    }
+    a {
+        color: unset;
+    }
+    .color-palette {
+      height: 35px;
+      line-height: 35px;
+      text-align: right;
+      padding-right: .75rem;
+    }
+    .color-palette.disabled {
+      text-align: center;
+      padding-right: 0;
+      display: block;
+    }
+
+    .color-palette-set {
+      margin-bottom: 15px;
+    }
+
+    .color-palette span {
+      display: none;
+      font-size: 12px;
+    }
+
+    .color-palette:hover span {
+      display: block;
+    }
+
+    .color-palette.disabled span {
+      display: block;
+      text-align: left;
+      padding-left: .75rem;
+    }
+
+    .color-palette-box h4 {
+      position: absolute;
+      left: 1.25rem;
+      margin-top: .75rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 12px;
+      display: block;
+      z-index: 7;
+    }
+</style>
+{% endblock %}
+
+{% block main %} 
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper"> 
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid"> 
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row"> 
+            <div class="col">
+                <table id="example" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Nom Patient</th>
+                                <th>Heure Debut</th>
+                                <th>Heure fin</th> 
+                                <th>Date</th>
+                                <th>Confirmer</th> 
+                                <th>Infirmer</th> 
+                                <th>Status</th> 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in appointments %} 
+                            <tr>
+                                <td>{{appointment.idPatient.fullName}}</td>
+                                <td>{{appointment.startTime|date("h:i")}}</td>
+                                <td>{{appointment.endTime|date("h:i")}}</td> 
+                                <td>{{appointment.appointmentDay|date("d/m/y")}}</td> 
+                                <td>
+                                    <button  type="button" class="btn btn-block btn-success btn-sm"><a href="confirm-appointment/{{appointment.id}}">Confirmer</a></button>
+                                </td>
+                                <td> 
+                                    <button type="button" class="btn btn-block btn-outline-danger btn-sm"><a href="invalidate-appointment/{{appointment.id}}">Infirmer</a></button>
+                                </td>
+                                <td></td> 
+                                <!--<td> 
+                                </td>-->
+                            </tr>
+                            {% endfor %} 
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Nom Patient</th>
+                                <th>Heure Debut</th>
+                                <th>Heure fin</th> 
+                                <th>Date</th>
+                                <th>Confirmer</th> 
+                                <th>Infirmer</th> 
+                                <th>Status</th> 
+                            </tr>
+                        </tfoot>
+                </table>
+            </div>
+          <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid --> 
+    </section> 
+    <!-- /.content -->
+  </div>
+{% endblock main %}
+{% block javascripts %}
+ <!-- DataTables --> 
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script> 
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script> 
+
+<script> 
+     j$ = jQuery.noConflict();
+           $(document).ready(function() {
+    var groupColumn = 3;
+    var table = $('#example').DataTable({
+        "columnDefs": [
+            { "visible": false, "targets": groupColumn }
+        ],
+        "order": [[ groupColumn, 'desc' ]],
+        "displayLength": 25,
+        "drawCallback": function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var last=null;
+ 
+            api.column(groupColumn, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="6">'+group+'</td></tr>'
+                    );
+ 
+                    last = group;
+                }
+            } );
+        }
+    } );
+ 
+    // O  rder by the grouping
+    $('#example tbody').on( 'click', 'tr.group', function () {
+        var currentOrder = table.order()[0];
+        if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {
+            table.order( [ groupColumn, 'desc' ] ).draw();
+        }
+        else {
+            table.order( [ groupColumn, 'asc' ] ).draw();
+        }
+    } );
+} );
+    </script>
+{% endblock javascripts %}
